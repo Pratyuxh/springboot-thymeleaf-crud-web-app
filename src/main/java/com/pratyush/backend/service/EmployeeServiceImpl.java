@@ -3,9 +3,12 @@ package com.pratyush.backend.service;
 import com.pratyush.backend.model.Employee;
 import com.pratyush.backend.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class EmployeeServiceImpl implements EmployeeService{
 
     @Autowired
@@ -13,7 +16,28 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
 
-        return null;
+    @Override
+    public void saveEmployee(Employee employee) {
+        this.employeeRepository.save(employee);
+    }
+
+    @Override
+    public Employee getEmployeeById(long id) {
+        Optional<Employee> optional = employeeRepository.findById(id);
+        Employee employee = null;
+        if(optional.isPresent()){
+            employee = optional.get();
+        }else{
+            throw new RuntimeException("Employee Not Found for ID ::" + id);
+        }
+        return employee;
+    }
+
+    @Override
+    public void deleteEmployeeById(long id){
+        this.employeeRepository.deleteById(id);
     }
 }
